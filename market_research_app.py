@@ -117,6 +117,15 @@ if st.button("Generate Results"):
                 top_agencies = ps.sqldf(query, locals())
                 st.write("#### Top agencies by spending")
                 st.write(top_agencies)
+
+                if not top_agencies.empty:
+                    excel_data = top_agencies.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="top_agencies.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during top agency spending: {e}")
 
@@ -140,6 +149,15 @@ if st.button("Generate Results"):
                 naics_spending = ps.sqldf(query_naics, locals())
                 st.write("#### Agency Spending on Selected NAICS Codes")
                 st.write(naics_spending)
+
+                if not naics_spending.empty:
+                    excel_data = naics_spending.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="naics_spending.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during NAICS analysis: {e}")
 
@@ -163,6 +181,15 @@ if st.button("Generate Results"):
                 psc_spending = ps.sqldf(query_psc, locals())
                 st.write("#### Agency Spending on Selected PSC Codes")
                 st.write(psc_spending)
+
+                if not psc_spending.empty:
+                    excel_data = psc_spending.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="psc_spending.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during PSC analysis: {e}")
 
@@ -201,6 +228,15 @@ if st.button("Generate Results"):
                 st.write("#### Top Agencies' Spending on Small Business")
                 top_agencies_sb_percentage = ps.sqldf(query_sb_percentages, locals())
                 st.write(top_agencies_sb_percentage)
+
+                if not top_agencies_sb_percentage.empty:
+                    excel_data = top_agencies_sb_percentage.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="small_business_spending.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during agency small business spending analysis: {e}")
 
@@ -240,6 +276,15 @@ if st.button("Generate Results"):
                 st.write("#### Top Agency Set-Aside Spending")
                 top_agencies_set_aside = ps.sqldf(query_set_aside, locals())
                 st.write(top_agencies_set_aside)
+
+                if not top_agencies_set_aside.empty:
+                    excel_data = top_agencies_set_aside.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="set_aside_spending.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during agency agency set-aside spending: {e}")
 
@@ -263,6 +308,15 @@ if st.button("Generate Results"):
                 st.write("#### Top Primes in Defined NAICS/PSC Codes")
                 top_recipients = ps.sqldf(query_top_primes, locals())
                 st.write(top_recipients)
+
+                if not top_recipients.empty:
+                    excel_data = top_recipients.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="top_primes.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during top primes analysis: {e}")
 
@@ -287,6 +341,15 @@ if st.button("Generate Results"):
                 st.write("#### Top Agencies SAP Utility")
                 top_agencies_sap = ps.sqldf(query_sap, locals())
                 st.write(top_agencies_sap)
+
+                if not top_agencies_sap.empty:
+                    excel_data = top_agencies_sap.to_excel(index=False)
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="sap_utility_spending.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during top agency SAP utility: {e}")
 
@@ -308,6 +371,15 @@ if st.button("Generate Results"):
                 st.write("#### Top Agencies Preferred Buying Methods")
                 top_agencies_award_type = ps.sqldf(query_award_type, locals())
                 st.write(top_agencies_award_type)
+
+                if not top_agencies_award_type.empty:
+                    excel_data = top_agencies_award_type.to_excel(index=False, engine='openpyxl')
+                    st.download_button(
+                        label="Download",
+                        data=excel_data,
+                        file_name="preferred_buying_methods.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
             except Exception as e:
                 st.error(f"Error during top agency preferred buying methods: {e}")
 
