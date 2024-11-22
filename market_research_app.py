@@ -144,7 +144,7 @@ if st.button("Generate Results"):
                 st.error(f"Error during NAICS analysis: {e}")
 
 
-            # PSC Query with corrected column name
+            # Top agency spending by PSC codes
             list_psc_codes = ', '.join(f"'{code}'" for code in psc_codes)
             query_psc = f"""
             SELECT
@@ -167,6 +167,7 @@ if st.button("Generate Results"):
                 st.error(f"Error during PSC analysis: {e}")
 
 
+            # Top agency spending by business size.
             query_sb_percentages = f"""
             WITH sb_data AS (
                 SELECT
@@ -203,6 +204,8 @@ if st.button("Generate Results"):
             except Exception as e:
                 st.error(f"Error during agency small business spending analysis: {e}")
 
+
+            # Top agency spending on different set-asides
             primes_combined["type_of_set_aside"] = primes_combined["type_of_set_aside"].fillna("NO SET ASIDE USED.")
             query_set_aside = f"""
             WITH sb_data AS (
@@ -241,6 +244,7 @@ if st.button("Generate Results"):
                 st.error(f"Error during agency agency set-aside spending: {e}")
 
 
+            # Top primes in the defined NAICS/PSC codes
             query_top_primes="""
             SELECT
                 recipient_name,
@@ -263,6 +267,7 @@ if st.button("Generate Results"):
                 st.error(f"Error during top primes analysis: {e}")
 
 
+            # Top agencies' SAP utility
             query_sap=f"""
             SELECT
                 awarding_agency_name,
@@ -286,6 +291,7 @@ if st.button("Generate Results"):
                 st.error(f"Error during top agency SAP utility: {e}")
 
 
+            # Top agencies' preferred buying methods
             query_award_type=f"""
             SELECT
                 awarding_agency_name,
