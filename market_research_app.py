@@ -73,7 +73,7 @@ else:
     st.write("No Keywords provided.")
 
 # Button to concatenate datasets and run analysis
-if st.button("Start Analysis"):
+if st.button("Generate Results"):
     try:
         # NAICS datasets
         naics_primes = datasets.get("Dataset 1")
@@ -171,11 +171,11 @@ if st.button("Start Analysis"):
             WITH sb_data AS (
                 SELECT
                     awarding_agency_name,
-                    contracting_officers_determination_of_business_size AS set_aside,
+                    contracting_officers_determination_of_business_size AS business_size,
                     SUM(total_dollars_obligated) AS total_obligation
                 FROM primes_combined
                 WHERE awarding_agency_name IN ({to_3_agencies})
-                GROUP BY awarding_agency_name, set_aside
+                GROUP BY awarding_agency_name, business_size
             ),
             agency_totals AS (
                 SELECT 
@@ -187,13 +187,13 @@ if st.button("Start Analysis"):
             )
             SELECT 
                 sb.awarding_agency_name,
-                sb.set_aside,
+                sb.business_size,
                 sb.total_obligation,
                 ROUND((sb.total_obligation * 100.0 / at.total_obligation), 2) AS percentage_of_total
             FROM sb_data AS sb
             JOIN agency_totals AS at
             ON sb.awarding_agency_name = at.awarding_agency_name
-            ORDER BY sb.awarding_agency_name, sb.set_aside DESC, sb.total_obligation DESC
+            ORDER BY sb.awarding_agency_name, sb.business_size DESC, sb.total_obligation DESC
             """
 
             try:
@@ -203,16 +203,16 @@ if st.button("Start Analysis"):
             except Exception as e:
                 st.error(f"Error during agency small business spending analysis: {e}")
 
-
+            primes_combined["type_of_set_aside"] = primes_combined["type_of_set_aside"].fillna("NO SET ASIDE USED.")
             query_set_aside = f"""
             WITH sb_data AS (
                 SELECT
                     awarding_agency_name,
-                    contracting_officers_determination_of_business_size AS set_aside,
+                    type_of_set_aside AS set_aside,
                     SUM(total_dollars_obligated) AS total_obligation
                 FROM primes_combined
                 WHERE awarding_agency_name IN ({to_3_agencies})
-                GROUP BY awarding_agency_name, set_aside
+                GROUP BY awarding_agency_name, type_of_set_aside
             ),
             agency_totals AS (
                 SELECT 
@@ -223,14 +223,14 @@ if st.button("Start Analysis"):
                 GROUP BY awarding_agency_name
             )
             SELECT 
-                sb.awarding_agency_name,
+                sb.awarding_agency_name AS agency,
                 sb.set_aside,
-                sb.total_obligation,
-                ROUND((sb.total_obligation * 100.0 / at.total_obligation), 2) AS percentage_of_total
+                sb.total_obligation AS set_aside_spending,
+                ROUND((sb.total_obligation * 100.0 / at.total_obligation), 2) AS percentage_of_total_spending
             FROM sb_data AS sb
             JOIN agency_totals AS at
             ON sb.awarding_agency_name = at.awarding_agency_name
-            ORDER BY sb.awarding_agency_name, sb.set_aside DESC, sb.total_obligation DESC
+            ORDER BY sb.awarding_agency_name, sb.total_obligation DESC, sb.set_aside DESC
             """
 
             try:
