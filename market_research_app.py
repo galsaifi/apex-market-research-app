@@ -3,8 +3,17 @@ import pandas as pd
 import pandasql as ps
 import io
 
+
 # Set up the Streamlit page
 st.set_page_config(page_title="USASpending Data Analysis Dashboard", layout="wide")
+
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
 st.title("APEX Market Research Dashboard")
 
