@@ -15,7 +15,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-st.title("APEX Market Research Dashboard")
+st.title("APEX Market Research App")
 
 # Placeholder for datasets
 datasets = {}
@@ -25,7 +25,7 @@ st.write("### Upload Datasets")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.write("#### NAICS Code Datasets")
+    st.write("#### NAICS Code Dataset")
     uploaded_file_1 = st.file_uploader("Upload Prime-Contract Dataset Using NAICS Codes", type=["csv", "xlsx"], key="uploader_1")
 
     if uploaded_file_1:
@@ -36,7 +36,7 @@ with col1:
             st.error(f"Error loading Prime-Contract NAICS Dataset: {e}")
 
 with col2:
-    st.write("#### PSC Code Datasets")
+    st.write("#### PSC Code Dataset")
     uploaded_file_3 = st.file_uploader("Upload Prime-Contract Dataset Using PSC Codes (Optional)", type=["csv", "xlsx"], key="uploader_3")
 
     if uploaded_file_3:
@@ -110,13 +110,14 @@ if "Dataset 1" in datasets:
                 st.session_state["results"] = {}
                 try:
                     top_agencies = ps.sqldf(query_top_agencies, locals())
+                    top_agencies.columns = ["Awarding Agency", "Total Spending", "Number of Transactions"]
                     st.session_state["results"]["Agency Spendings"] = top_agencies
                 except Exception as e:
                     st.error(f"Error during top agency analysis: {e}")
 
 
                 # NAICS Query
-                to_3_agencies = ', '.join(f"'{agency}'" for agency in top_agencies["awarding_agency_name"].head(3))
+                to_3_agencies = ', '.join(f"'{agency}'" for agency in top_agencies["Awarding Agency"].head(3))
                 list_naics_codes = ', '.join(f"'{code}'" for code in naics_codes)
 
                 query_naics = f"""
@@ -135,6 +136,7 @@ if "Dataset 1" in datasets:
 
                 try:
                     naics_spending = ps.sqldf(query_naics, locals())
+                    naics_spending.columns = ["Awarding Agency", "NAICS Code", "Total Spending", "Number of Transactions"]
                     st.session_state["results"]["Agency Spending on NAICS Codes"] = naics_spending
                 except Exception as e:
                     st.error(f"Error during NAICS analysis: {e}")
@@ -160,6 +162,7 @@ if "Dataset 1" in datasets:
                 # Run query and save result
                 try:
                     psc_spending = ps.sqldf(query_psc, locals())
+                    psc_spending.columns = ["Awarding Agency", "PSC Code", "Total Spending", "Number of Transactions"]
                     st.session_state["results"]["Agency Spending on PSC Codes"] = psc_spending
                 except Exception as e:
                     st.error(f"Error during PSC analysis: {e}")
@@ -197,6 +200,8 @@ if "Dataset 1" in datasets:
 
                 try:
                     small_business_spending = ps.sqldf(query_sb_percentages, locals())
+                    small_business_spending.columns = ["Awarding Agency", "Business Size", "Total Spending", 
+                                                       "Percentage of Total Spending"]
                     st.session_state["results"]["Agency Small Business Spending"] = small_business_spending
                 except Exception as e:
                     st.error(f"Error during agency small business spending analysis: {e}")
@@ -237,6 +242,7 @@ if "Dataset 1" in datasets:
 
                 try:
                     set_aside_spending = ps.sqldf(query_set_aside, locals())
+                    set_aside_spending.columns = ["Awarding Agency", "Set-Aside", "Total Spending", "Percentage of Total Spending"]
                     st.session_state["results"]["Agency Set-Aside Spending"] = set_aside_spending
                 except Exception as e:
                     st.error(f"Error during agency set-aside spending analysis: {e}")
@@ -258,6 +264,8 @@ if "Dataset 1" in datasets:
 
                 try:
                     top_primes = ps.sqldf(query_top_primes, locals())
+                    top_primes.columns = ["Recipient Name", "Recipient UEI", "Total Spending", "Number of Transactions",
+                                        "Business Size", "Organizational Type"]
                     st.session_state["results"]["Top Primes"] = top_primes
                 except Exception as e:
                     st.error(f"Error during top primes analysis: {e}")
@@ -282,6 +290,8 @@ if "Dataset 1" in datasets:
                 # Run query and save result
                 try:
                     top_agencies_sap = ps.sqldf(query_sap, locals())
+                    top_agencies_sap.columns = ["Awarding Agency", "SAP Utility", "Total Spending", "Number of Transactions", 
+                                                "Percentage of Obligation"]
                     st.session_state["results"]["Agency SAP Utility"] = top_agencies_sap
                 except Exception as e:
                     st.error(f"Error during top agency SAP utility: {e}")
@@ -302,6 +312,7 @@ if "Dataset 1" in datasets:
 
                 try:
                     top_agencies_award_type = ps.sqldf(query_award_type, locals())
+                    top_agencies_award_type.columns = ["Awarding Agency", "Award Type", "Number of Transactions", "Total Obligation"]
                     st.session_state["results"]["Agency Preferred Buying Methods"] = top_agencies_award_type
                 except Exception as e:
                     st.error(f"Error during top agency preferred buying methods: {e}")
