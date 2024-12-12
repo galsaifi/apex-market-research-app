@@ -331,26 +331,6 @@ if "Dataset 1" in datasets:
         except Exception as e:
             st.error(f"Error data processing: {e}")
 
-if "Top Primes" in st.session_state["results"]:
-    st.write("### Top Primes")
-    st.write(st.session_state["results"]["Top Primes"])
-else:
-    st.warning("No Top Primes results to display.")
-
-
-required_columns = [
-    "recipient_name",
-    "recipient_uei",
-    "total_dollars_obligated",
-    "contracting_officers_determination_of_business_size",
-    "organizational_type"
-]
-
-missing_columns = [col for col in required_columns if col not in primes_combined.columns]
-if missing_columns:
-    st.error(f"Missing columns: {missing_columns}")
-else:
-    st.success("All required columns are present.")
 
 if "results" in st.session_state and st.session_state["results"]:
     results_list = list(st.session_state["results"].items())
