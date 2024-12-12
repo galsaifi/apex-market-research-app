@@ -350,7 +350,21 @@ if "results" in st.session_state and st.session_state["results"]:
                 file_name=f"{result_name.replace(' ', '_').lower()}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             )
-
+        
         # Add a divider line if not the last iteration
         if idx < len(results_list) - 1:
             st.write("---")
+
+    all_results_buffer = io.BytesIO()
+    with pd.ExcelWriter(all_results_buffer, engine="openpyxl") as writer:
+        for result_name, result_df in results_list:
+            sheet_name = result_name[:31]  # Excel sheet names have a 31-character limit
+            result_df.to_excel(writer, index=False, sheet_name=sheet_name)
+    all_results_buffer.seek(0)
+
+    st.download_button(
+        label="Download All Results",
+        data=all_results_buffer,
+        file_name="all_results_combined.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
