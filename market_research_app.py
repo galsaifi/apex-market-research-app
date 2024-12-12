@@ -115,7 +115,6 @@ if "Dataset 1" in datasets:
                 FROM primes_combined
                 GROUP BY awarding_agency_name
                 ORDER BY total_obligation DESC, number_of_transactions DESC
-                LIMIT 20
                 """
                 
                 st.session_state["results"] = {}
@@ -262,12 +261,12 @@ if "Dataset 1" in datasets:
                 # Top primes in the defined NAICS/PSC codes
                 query_top_primes = """
                 SELECT
-                    recipient_name,
+                    ANY_VALUE(recipient_name) AS recipient_name,
                     recipient_uei,
                     SUM(total_dollars_obligated) AS total_obligation,
                     COUNT(*) AS number_of_transactions,
-                    contracting_officers_determination_of_business_size,
-                    organizational_type
+                    ANY_VALUE(contracting_officers_determination_of_business_size) AS business_size,
+                    ANY_VALUE(organizational_type) AS organizational_type
                 FROM primes_combined
                 GROUP BY recipient_uei
                 ORDER BY total_obligation DESC, number_of_transactions DESC
@@ -356,6 +355,9 @@ if "results" in st.session_state and st.session_state["results"]:
         if idx < len(results_list) - 1:
             st.write("---")
 
+
+    st.write("---")
+    st.write("Download All Results in a Single Excel File") 
     all_results_buffer = io.BytesIO()
     with pd.ExcelWriter(all_results_buffer, engine="openpyxl") as writer:
         for result_name, result_df in results_list:
