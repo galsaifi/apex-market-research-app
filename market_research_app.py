@@ -331,7 +331,12 @@ if "Dataset 1" in datasets:
         except Exception as e:
             st.error(f"Error data processing: {e}")
 
-
+if "Top Primes" in st.session_state["results"]:
+    st.write("### Top Primes")
+    st.write(st.session_state["results"]["Top Primes"])
+else:
+    st.warning("No Top Primes results to display.")
+    
 if "results" in st.session_state and st.session_state["results"]:
     results_list = list(st.session_state["results"].items())
     for idx, (result_name, result_df) in enumerate(results_list):
@@ -357,7 +362,7 @@ if "results" in st.session_state and st.session_state["results"]:
 
 
     st.write("---")
-    st.write("Download All Results in a Single Excel File") 
+    st.write(f"### Download All Results in a Single Excel File") 
     all_results_buffer = io.BytesIO()
     with pd.ExcelWriter(all_results_buffer, engine="openpyxl") as writer:
         for result_name, result_df in results_list:
