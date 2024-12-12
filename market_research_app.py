@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pandasql as ps
 import io
+import duckdb
 
 
 # Set up the Streamlit page
@@ -119,7 +120,7 @@ if "Dataset 1" in datasets:
                 
                 st.session_state["results"] = {}
                 try:
-                    top_agencies = ps.sqldf(query_top_agencies, locals())
+                    top_agencies = duckdb.query(query_top_agencies).df()
                     top_agencies.columns = ["Awarding Agency", "Total Spending", "Number of Transactions"]
                     st.session_state["results"]["Agency Spendings"] = top_agencies
                 except Exception as e:
@@ -145,7 +146,7 @@ if "Dataset 1" in datasets:
                 """
 
                 try:
-                    naics_spending = ps.sqldf(query_naics, locals())
+                    naics_spending = duckdb.query(query_naics).df()
                     naics_spending.columns = ["Awarding Agency", "NAICS Code", "Total Spending", "Number of Transactions"]
                     st.session_state["results"]["Agency Spending on NAICS Codes"] = naics_spending
                 except Exception as e:
@@ -171,7 +172,7 @@ if "Dataset 1" in datasets:
 
                 # Run query and save result
                 try:
-                    psc_spending = ps.sqldf(query_psc, locals())
+                    psc_spending = duckdb.query(query_psc).df()
                     psc_spending.columns = ["Awarding Agency", "PSC Code", "Total Spending", "Number of Transactions"]
                     st.session_state["results"]["Agency Spending on PSC Codes"] = psc_spending
                 except Exception as e:
@@ -209,7 +210,7 @@ if "Dataset 1" in datasets:
                 """
 
                 try:
-                    small_business_spending = ps.sqldf(query_sb_percentages, locals())
+                    small_business_spending = duckdb.query(query_sb_percentages).df()
                     small_business_spending.columns = ["Awarding Agency", "Business Size", "Total Spending", 
                                                        "Percentage of Total Spending"]
                     st.session_state["results"]["Agency Small Business Spending"] = small_business_spending
@@ -251,7 +252,7 @@ if "Dataset 1" in datasets:
                 """
 
                 try:
-                    set_aside_spending = ps.sqldf(query_set_aside, locals())
+                    set_aside_spending = duckdb.query(query_set_aside).df()
                     set_aside_spending.columns = ["Awarding Agency", "Set-Aside", "Total Spending", "Percentage of Total Spending"]
                     st.session_state["results"]["Agency Set-Aside Spending"] = set_aside_spending
                 except Exception as e:
@@ -273,7 +274,7 @@ if "Dataset 1" in datasets:
                 """
 
                 try:
-                    top_primes = ps.sqldf(query_top_primes, locals())
+                    top_primes = duckdb.query(query_top_primes).df()
                     top_primes.columns = ["Recipient Name", "Recipient UEI", "Total Spending", "Number of Transactions",
                                         "Business Size", "Organizational Type"]
                     st.session_state["results"]["Top Primes"] = top_primes
@@ -299,7 +300,7 @@ if "Dataset 1" in datasets:
 
                 # Run query and save result
                 try:
-                    top_agencies_sap = ps.sqldf(query_sap, locals())
+                    top_agencies_sap = duckdb.query(query_sap).df()
                     top_agencies_sap.columns = ["Awarding Agency", "SAP Utility", "Total Spending", "Number of Transactions", 
                                                 "Percentage of Obligation"]
                     st.session_state["results"]["Agency SAP Utility"] = top_agencies_sap
@@ -321,7 +322,7 @@ if "Dataset 1" in datasets:
                 """
 
                 try:
-                    top_agencies_award_type = ps.sqldf(query_award_type, locals())
+                    top_agencies_award_type = duckdb.query(query_award_type).df()
                     top_agencies_award_type.columns = ["Awarding Agency", "Award Type", "Number of Transactions", "Total Obligation"]
                     st.session_state["results"]["Agency Preferred Buying Methods"] = top_agencies_award_type
                 except Exception as e:
