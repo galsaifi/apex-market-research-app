@@ -87,6 +87,15 @@ if "Dataset 1" in datasets:
             psc_primes = datasets.get("Dataset 3")
             primes_combined = pd.concat([naics_primes, psc_primes], ignore_index=True) if naics_primes is not None else pd.DataFrame()
 
+            if "total_dollars_obligated" in primes_combined.columns:
+                    primes_combined["total_dollars_obligated"] = (
+                        primes_combined["total_dollars_obligated"]
+                        .apply(pd.to_numeric, errors="coerce")  # Convert to numeric, replace invalid values with NaN
+                        .fillna(0)  # Replace NaN with 0
+                        .astype("float64")  # Ensure the column uses float64
+                    )
+            primes_combined["total_dollars_obligated"] = primes_combined["total_dollars_obligated"].clip(upper=(2**63 - 1))
+            
             if not primes_combined.empty and "transaction_description" in primes_combined.columns and keywords:
                 pattern = '|'.join(keywords)
                 primes_combined = primes_combined[primes_combined['transaction_description'].str.contains(pattern, case=False, na=False)]
