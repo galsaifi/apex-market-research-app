@@ -105,6 +105,7 @@ if "Dataset 1" in datasets:
                 FROM primes_combined
                 GROUP BY awarding_agency_name
                 ORDER BY total_obligation DESC, number_of_transactions DESC
+                LIMIT 20
                 """
                 
                 st.session_state["results"] = {}
