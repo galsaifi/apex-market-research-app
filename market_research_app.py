@@ -336,7 +336,26 @@ if "Top Primes" in st.session_state["results"]:
     st.write(st.session_state["results"]["Top Primes"])
 else:
     st.warning("No Top Primes results to display.")
-    
+
+st.write("### Debug: primes_combined DataFrame")
+st.write(primes_combined.head())
+
+# Check if required columns exist
+required_columns = ["recipient_name", "recipient_uei", "total_dollars_obligated",
+                    "contracting_officers_determination_of_business_size", "organizational_type"]
+
+missing_columns = [col for col in required_columns if col not in primes_combined.columns]
+if missing_columns:
+    st.error(f"Missing columns: {missing_columns}")
+else:
+    st.success("All required columns are present.")
+
+# Check for rows with valid total_dollars_obligated
+valid_rows = primes_combined[primes_combined['total_dollars_obligated'] > 0]
+st.write("### Debug: Rows with total_dollars_obligated > 0")
+st.write(valid_rows.head())
+
+
 if "results" in st.session_state and st.session_state["results"]:
     results_list = list(st.session_state["results"].items())
     for idx, (result_name, result_df) in enumerate(results_list):
